@@ -15,16 +15,23 @@ def handle_slot():
     data = request.get_json()
     slot = data.get('slot')
 
-    if slot is None or not isinstance(slot, int) or not (0 <= slot <= 43):
-        return jsonify({'error': 'Invalid slot'}), 400
+    if slot is None or not isinstance(slot, int):
+        return jsonify({'error': 'Invalid slot type'}), 400
 
     try:
-        ser.write(f"{slot}\n".encode())
-        print(f"[INFO] 슬롯 {slot} 전송됨 (from /slot)")
+        if slot == -1:
+            # 모든 LED OFF 명령 전송
+            ser.write(b"ALL_OFF\n")
+            print("[INFO] 모든 LED OFF 전송됨")
+        elif 0 <= slot <= 43:
+            ser.write(f"{slot}\n".encode())
+            print(f"[INFO] 슬롯 {slot} 전송됨 (from /slot)")
+        else:
+            return jsonify({'error': 'Invalid slot range'}), 400
+
         return jsonify({'status': 'ok'})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

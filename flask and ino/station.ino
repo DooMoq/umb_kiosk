@@ -12,12 +12,24 @@ void setup() {
 void loop() {
   if (Serial.available()) {
     String input = Serial.readStringUntil('\n');
+
+    // ALL_OFF 명령 처리
+    if (input == "ALL_OFF") {
+      digitalWrite(latchPin, LOW);
+      for (int i = 0; i < 20; i++) {
+        shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      }
+      digitalWrite(latchPin, HIGH);
+      return;
+    }
+
     int slotIndex = input.toInt();
     if (slotIndex < 0 || slotIndex > 43) return;
 
     digitalWrite(latchPin, LOW);
     switch (slotIndex) {
     case 0:
+
       shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
       shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
       shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);

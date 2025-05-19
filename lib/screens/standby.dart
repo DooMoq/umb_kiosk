@@ -1,8 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class StandbyScreen extends StatelessWidget {
+class StandbyScreen extends StatefulWidget {
   const StandbyScreen({super.key});
+
+  @override
+  State<StandbyScreen> createState() => _StandbyScreenState();
+}
+
+class _StandbyScreenState extends State<StandbyScreen> {
+  @override
+  void initState() {
+    super.initState();
+    turnOffAllLeds(); // 화면 진입 시 모든 LED OFF 요청
+  }
+
+  Future<void> turnOffAllLeds() async {
+    try {
+      final response = await http.post(
+        Uri.parse('http://YOUR_SERVER_IP:5000/slot'), // ← 서버 주소 수정 필요
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'slot': -1}),
+      );
+      if (response.statusCode == 200) {
+        print('✅ 모든 LED OFF 요청 성공');
+      } else {
+        print('❌ LED OFF 요청 실패: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('❌ 예외 발생: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
