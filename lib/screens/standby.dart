@@ -20,7 +20,7 @@ class _StandbyScreenState extends State<StandbyScreen> {
   Future<void> turnOffAllLeds() async {
     try {
       final response = await http.post(
-        Uri.parse('http://YOUR_SERVER_IP:5000/slot'), // ← 서버 주소 수정 필요
+        Uri.parse('http://localhost:5000/slot'), // ← 서버 주소 수정 필요
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'slot': -1}),
       );

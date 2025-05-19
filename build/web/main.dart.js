@@ -36430,7 +36430,7 @@ this.xt()},
 xt(){var s=0,r=A.S(t.H),q=1,p,o,n,m,l,k,j,i
 var $async$xt=A.O(function(a,b){if(a===1){p=b
 s=q}while(true)switch(s){case 0:q=3
-m=A.cM("http://YOUR_SERVER_IP:5000/slot")
+m=A.cM("http://localhost:5000/slot")
 l=t.N
 k=A.as(["Content-Type","application/json"],l,l)
 s=6
