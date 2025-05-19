@@ -25,20 +25,6 @@ def handle_slot():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/led_control', methods=['POST'])
-def handle_led_control():
-    data = request.get_json()
-    slot = data.get('slot')
-
-    if slot is None or not isinstance(slot, int) or not (0 <= slot <= 43):
-        return jsonify({'error': 'Invalid slot'}), 400
-
-    try:
-        ser.write(f"{slot}\n".encode())
-        print(f"[INFO] 슬롯 {slot} 전송됨 (from /led_control)")
-        return jsonify({'status': 'ok'})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
