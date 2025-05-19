@@ -997,29 +997,30 @@ void loop() {
       shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
       break;
     case 44:
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b11000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b11000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
       
-      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
-      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
-      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
-      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
-      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
-      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
-      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
-      shiftOut(dataPin, clockPin, LSBFIRST, 0b11000000);
-      shiftOut(dataPin, clockPin, LSBFIRST, 0b11000000);
-      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
-      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
-      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
-      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
-      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
-      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
-      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
-      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
-      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
-      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
-      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
       break;
     case 45:
+    shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
   shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
   shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
   shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
@@ -1039,10 +1040,11 @@ void loop() {
   shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
   shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
   shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
-  shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+  
   break;
 
 case 46:
+shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
   shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
   shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
   shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
@@ -1062,7 +1064,7 @@ case 46:
   shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
   shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
   shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
-  shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+  
   break;
 
 case 47:
@@ -1085,7 +1087,7 @@ case 47:
   shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
   shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
   shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
-  shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+  
   break;
 
 case 48:
@@ -1204,7 +1206,7 @@ case 52:
   break;
 
 case 53:
-  shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+  
   shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
   shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
   shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
@@ -1213,6 +1215,7 @@ case 53:
   shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
   shiftOut(dataPin, clockPin, LSBFIRST, 0b11000000);
   shiftOut(dataPin, clockPin, LSBFIRST, 0b11000000);
+  shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
   shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
   shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
   shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
@@ -1227,7 +1230,7 @@ case 53:
   break;
 
 case 54:
-  shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+  
   shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
   shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
   shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
@@ -1236,6 +1239,7 @@ case 54:
   shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
   shiftOut(dataPin, clockPin, LSBFIRST, 0b01100000);
   shiftOut(dataPin, clockPin, LSBFIRST, 0b01100000);
+  shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
   shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
   shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
   shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
