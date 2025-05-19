@@ -14,8 +14,8 @@ class _StandbyScreenState extends State<StandbyScreen> {
   @override
   void initState() {
     super.initState();
-    turnOffAllLeds(); // 기존 LED OFF 요청
-    turnOffAllRelays(); // 추가된 릴레이 OFF 요청
+    turnOffAllLeds(); // ✅ LED OFF
+    turnOffAllRelays(); // ✅ 릴레이 OFF
   }
 
   Future<void> turnOffAllLeds() async {
@@ -23,7 +23,7 @@ class _StandbyScreenState extends State<StandbyScreen> {
       final response = await http.post(
         Uri.parse('http://localhost:5000/slot'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'slot': -1}),
+        body: jsonEncode({'led': -1, 'relay': -1}), // ✅ 구조 변경
       );
       if (response.statusCode == 200) {
         print('✅ 모든 LED OFF 요청 성공');
@@ -31,7 +31,7 @@ class _StandbyScreenState extends State<StandbyScreen> {
         print('❌ LED OFF 요청 실패: ${response.statusCode}');
       }
     } catch (e) {
-      print('❌ 예외 발생: $e');
+      print('❌ LED OFF 예외 발생: $e');
     }
   }
 

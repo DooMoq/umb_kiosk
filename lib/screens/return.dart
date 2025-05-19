@@ -18,7 +18,7 @@ class _ReturnScreenState extends State<ReturnScreen> {
       final res = await http.post(
         Uri.parse('http://localhost:5000/slot'),
         headers: {'Content-Type': 'application/json'},
-        body: json.encode({'slot': index + 44}), // ✅ 여긴 그대로 유지
+        body: json.encode({'led': index + 44, 'relay': -1}), // ✅ 구조 변경
       );
       if (res.statusCode != 200) {
         print('[RETURN] 서버 오류: ${res.body}');
