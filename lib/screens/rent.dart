@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class RentScreen extends StatefulWidget {
   const RentScreen({super.key});
@@ -10,6 +12,21 @@ class RentScreen extends StatefulWidget {
 
 class _RentScreenState extends State<RentScreen> {
   int? selectedSlot;
+
+  Future<void> sendSlotIndex(int index) async {
+    try {
+      final res = await http.post(
+        Uri.parse('http://localhost:5000/slot'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({'slot': index}),
+      );
+      if (res.statusCode != 200) {
+        print('Flask 서버 오류: ${res.body}');
+      }
+    } catch (e) {
+      print('Flask 서버 통신 실패: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +41,6 @@ class _RentScreenState extends State<RentScreen> {
               child: Hero(
                 tag: 'rent-title',
                 child: Material(
-                  // Text는 반드시 Material로 감싸야 Hero 애니메이션이 적용됨!
                   color: Colors.transparent,
                   child: Text(
                     '대여할 우산 슬롯을 선택해주세요',
@@ -39,9 +55,8 @@ class _RentScreenState extends State<RentScreen> {
             ),
             const SizedBox(height: 10),
             ElevatedButton(
-              onPressed: selectedSlot != null
-                  ? () => context.go('/after_rent') // ✅ 페이지 이동
-                  : null,
+              onPressed:
+                  selectedSlot != null ? () => context.go('/after_rent') : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: selectedSlot != null
                     ? const Color(0xFF73BE76)
@@ -75,7 +90,6 @@ class _RentScreenState extends State<RentScreen> {
 
                   int visibleIndex = index > 4 ? index - 1 : index;
                   int displayNumber = visibleIndex + 1;
-
                   final isSelected = selectedSlot == index;
 
                   return GestureDetector(
@@ -83,6 +97,9 @@ class _RentScreenState extends State<RentScreen> {
                       setState(() {
                         selectedSlot = index;
                       });
+
+                      int slotToSend = index > 4 ? index - 1 : index; // ✅ 보정
+                      sendSlotIndex(slotToSend); // ✅ 전송
                     },
                     child: LayoutBuilder(
                       builder: (context, constraints) {
@@ -91,8 +108,7 @@ class _RentScreenState extends State<RentScreen> {
                             displayNumber, fontSize, isSelected);
 
                         return isSelected
-                            ? Hero(
-                                tag: 'selected-slot', child: slot) // ✅ Hero 적용
+                            ? Hero(tag: 'selected-slot', child: slot)
                             : slot;
                       },
                     ),

@@ -1,0 +1,44 @@
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+import serial
+import time
+
+app = Flask(__name__)
+CORS(app)  # ✅ 모든 출처(origin)에 대해 CORS 허용
+
+# 아두이노 시리얼 포트 연결
+ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
+time.sleep(2)  # 아두이노 초기화 대기
+
+@app.route('/slot', methods=['POST'])
+def handle_slot():
+    data = request.get_json()
+    slot = data.get('slot')
+
+    if slot is None or not isinstance(slot, int) or not (0 <= slot <= 43):
+        return jsonify({'error': 'Invalid slot'}), 400
+
+    try:
+        ser.write(f"{slot}\n".encode())
+        print(f"[INFO] 슬롯 {slot} 전송됨 (from /slot)")
+        return jsonify({'status': 'ok'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/led_control', methods=['POST'])
+def handle_led_control():
+    data = request.get_json()
+    slot = data.get('slot')
+
+    if slot is None or not isinstance(slot, int) or not (0 <= slot <= 43):
+        return jsonify({'error': 'Invalid slot'}), 400
+
+    try:
+        ser.write(f"{slot}\n".encode())
+        print(f"[INFO] 슬롯 {slot} 전송됨 (from /led_control)")
+        return jsonify({'status': 'ok'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
