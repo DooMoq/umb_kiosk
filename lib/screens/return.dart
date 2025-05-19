@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ReturnScreen extends StatefulWidget {
   const ReturnScreen({super.key});
@@ -10,6 +12,31 @@ class ReturnScreen extends StatefulWidget {
 
 class _ReturnScreenState extends State<ReturnScreen> {
   int? selectedSlot;
+
+  Future<void> sendSlotToServer(int slot) async {
+    final url = Uri.parse('http://localhost:5000/slot');
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'slot': slot + 44}), // 🔴 +44로 보냄
+      );
+      if (response.statusCode == 200) {
+        print('[RETURN] 서버 전송 성공: 슬롯 $slot (+44)');
+      } else {
+        print('[RETURN] 서버 전송 실패: ${response.body}');
+      }
+    } catch (e) {
+      print('[RETURN] 서버 요청 오류: $e');
+    }
+  }
+
+  void handleReturn() {
+    if (selectedSlot != null) {
+      sendSlotToServer(selectedSlot!);
+      context.go('/after_return');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +65,7 @@ class _ReturnScreenState extends State<ReturnScreen> {
             ),
             const SizedBox(height: 10),
             ElevatedButton(
-              onPressed: selectedSlot != null
-                  ? () => context.go('/after_return')
-                  : null,
+              onPressed: selectedSlot != null ? handleReturn : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: selectedSlot != null
                     ? const Color.fromARGB(255, 255, 73, 73)
