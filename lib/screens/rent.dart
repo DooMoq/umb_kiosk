@@ -28,6 +28,20 @@ class _RentScreenState extends State<RentScreen> {
     }
   }
 
+  Future<void> unlockSlot() async {
+    try {
+      final res = await http.post(
+        Uri.parse('http://localhost:5000/unlock'),
+        headers: {'Content-Type': 'application/json'},
+      );
+      if (res.statusCode != 200) {
+        print('릴레이 제어 실패: ${res.body}');
+      }
+    } catch (e) {
+      print('릴레이 전송 에러: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,7 +77,10 @@ class _RentScreenState extends State<RentScreen> {
                 const SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: selectedSlot != null
-                      ? () => context.go('/after_rent')
+                      ? () async {
+                          await unlockSlot(); // 🔓 릴레이 제어 먼저 수행
+                          context.go('/after_rent'); // 기존 흐름 유지
+                        }
                       : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: selectedSlot != null
