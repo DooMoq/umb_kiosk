@@ -1,0 +1,28 @@
+^C:\WORKSPACE\CAPSTONE_PROJECT\DISPLAY\BUILD\WINDOWS\X64\CMAKEFILES\145216988909F1D7485AA6A4AE912743\FLUTTER_WINDOWS.DLL.RULE
+setlocal
+"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E env FLUTTER_ROOT=C:\tools\flutter PROJECT_DIR=C:\Workspace\Capstone_Project\display FLUTTER_ROOT=C:\tools\flutter FLUTTER_EPHEMERAL_DIR=C:\Workspace\Capstone_Project\display\windows\flutter\ephemeral PROJECT_DIR=C:\Workspace\Capstone_Project\display FLUTTER_TARGET=C:\Workspace\Capstone_Project\display\lib\main.dart DART_OBFUSCATION=false TRACK_WIDGET_CREATION=true TREE_SHAKE_ICONS=false PACKAGE_CONFIG=C:\Workspace\Capstone_Project\display\.dart_tool\package_config.json C:/tools/flutter/packages/flutter_tools/bin/tool_backend.bat windows-x64 Debug
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\WORKSPACE\CAPSTONE_PROJECT\DISPLAY\BUILD\WINDOWS\X64\CMAKEFILES\80C37721C06B3414D7070A4F2F45BEDD\FLUTTER_ASSEMBLE.RULE
+setlocal
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\WORKSPACE\CAPSTONE_PROJECT\DISPLAY\WINDOWS\FLUTTER\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Workspace/Capstone_Project/display/windows -BC:/Workspace/Capstone_Project/display/build/windows/x64 --check-stamp-file C:/Workspace/Capstone_Project/display/build/windows/x64/flutter/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
