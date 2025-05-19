@@ -24,7 +24,7 @@ void loop() {
     }
 
     int slotIndex = input.toInt();
-    if (slotIndex < 0 || slotIndex > 43) return;
+    if (slotIndex < 0 || slotIndex > 87) return;
 
     digitalWrite(latchPin, LOW);
     switch (slotIndex) {

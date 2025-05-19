@@ -13,28 +13,18 @@ class ReturnScreen extends StatefulWidget {
 class _ReturnScreenState extends State<ReturnScreen> {
   int? selectedSlot;
 
-  Future<void> sendSlotToServer(int slot) async {
-    final url = Uri.parse('http://localhost:5000/slot');
+  Future<void> sendSlotIndex(int index) async {
     try {
-      final response = await http.post(
-        url,
+      final res = await http.post(
+        Uri.parse('http://localhost:5000/slot'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'slot': slot + 44}), // 🔴 +44로 보냄
+        body: json.encode({'slot': index + 44}), // ✅ 여기만 +44
       );
-      if (response.statusCode == 200) {
-        print('[RETURN] 서버 전송 성공: 슬롯 $slot (+44)');
-      } else {
-        print('[RETURN] 서버 전송 실패: ${response.body}');
+      if (res.statusCode != 200) {
+        print('[RETURN] 서버 오류: ${res.body}');
       }
     } catch (e) {
-      print('[RETURN] 서버 요청 오류: $e');
-    }
-  }
-
-  void handleReturn() {
-    if (selectedSlot != null) {
-      sendSlotToServer(selectedSlot!);
-      context.go('/after_return');
+      print('[RETURN] 서버 통신 실패: $e');
     }
   }
 
@@ -65,7 +55,9 @@ class _ReturnScreenState extends State<ReturnScreen> {
             ),
             const SizedBox(height: 10),
             ElevatedButton(
-              onPressed: selectedSlot != null ? handleReturn : null,
+              onPressed: selectedSlot != null
+                  ? () => context.go('/after_return')
+                  : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: selectedSlot != null
                     ? const Color.fromARGB(255, 255, 73, 73)
@@ -104,12 +96,16 @@ class _ReturnScreenState extends State<ReturnScreen> {
                       setState(() {
                         selectedSlot = index;
                       });
+
+                      int slotToSend = index > 4 ? index - 1 : index; // ✅ 보정
+                      sendSlotIndex(slotToSend); // ✅ +44 포함하여 전송
                     },
                     child: LayoutBuilder(
                       builder: (context, constraints) {
                         double fontSize = constraints.maxWidth * 0.15;
-                        final slot =
-                            buildSlot(displayNumber, fontSize, isSelected);
+                        final slot = buildSlotContainer(
+                            displayNumber, fontSize, isSelected);
+
                         return isSelected
                             ? Hero(tag: 'selected-slot', child: slot)
                             : slot;
@@ -125,7 +121,8 @@ class _ReturnScreenState extends State<ReturnScreen> {
     );
   }
 
-  Widget buildSlot(int displayNumber, double fontSize, bool isSelected) {
+  Widget buildSlotContainer(
+      int displayNumber, double fontSize, bool isSelected) {
     return Padding(
       padding: const EdgeInsets.all(2.0),
       child: Container(

@@ -23,7 +23,7 @@ def handle_slot():
             # 모든 LED OFF 명령 전송
             ser.write(b"ALL_OFF\n")
             print("[INFO] 모든 LED OFF 전송됨")
-        elif 0 <= slot <= 43:
+        elif 0 <= slot <= 87:
             ser.write(f"{slot}\n".encode())
             print(f"[INFO] 슬롯 {slot} 전송됨 (from /slot)")
         else:
