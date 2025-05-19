@@ -25,59 +25,59 @@ def send_to_giga(command: str):
     except Exception as e:
         print(f"[ERROR] Giga 전송 실패: {e}")
 
-# ✅ 마지막 선택된 슬롯 저장 변수
-last_selected_slot = None
-
 @app.route('/slot', methods=['POST'])
 def handle_slot():
-    global last_selected_slot
     data = request.get_json()
-    slot = data.get('slot')
+    led_index = data.get('led')
+    relay_index = data.get('relay')
 
-    if slot is None or not isinstance(slot, int):
-        return jsonify({'error': 'Invalid slot type'}), 400
+    if led_index is None or not isinstance(led_index, int):
+        return jsonify({'error': 'Missing or invalid LED index'}), 400
+    if relay_index is None or not isinstance(relay_index, int):
+        return jsonify({'error': 'Missing or invalid relay index'}), 400
 
     if ser is None:
         return jsonify({'error': 'Serial not connected'}), 500
 
     try:
-        # ✅ 선택 슬롯 저장 (릴레이 제어용)
-        last_selected_slot = slot
-
-        if slot == -1:
+        # 🔹 LED 제어 (UNO)
+        if led_index == -1:
             ser.write(b"ALL_OFF\n")
             print("[INFO] 모든 LED OFF 전송됨")
-        elif 0 <= slot <= 87:
-            encoded = f"{slot}\n".encode()
-            repeat = 10 if 68 <= slot <= 77 else 1
+        elif 0 <= led_index <= 87:
+            encoded = f"{led_index}\n".encode()
+            repeat = 10 if 68 <= led_index <= 77 else 1
 
             for _ in range(repeat):
                 ser.write(encoded)
                 ser.flush()
                 time.sleep(0.01)
 
-            print(f"[INFO] 슬롯 {slot} 전송됨 ({repeat}회)")
+            print(f"[INFO] LED 슬롯 {led_index} 전송됨 ({repeat}회)")
         else:
-            return jsonify({'error': 'Invalid slot range'}), 400
+            return jsonify({'error': 'Invalid LED index range'}), 400
+
+        # 🔹 릴레이 인덱스 저장용 로그만 남김 (전송은 unlock에서 함)
+        print(f"[INFO] 릴레이 슬롯 {relay_index} 준비 완료 (저장 X)")
 
         return jsonify({'status': 'ok'})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# ✅ 릴레이 잠금 해제용 unlock 엔드포인트
 @app.route('/unlock', methods=['POST'])
 def handle_unlock():
-    global last_selected_slot
-    if last_selected_slot is None or not (1 <= last_selected_slot <= 8):
-        return jsonify({'error': 'No valid slot selected'}), 400
+    data = request.get_json()
+    relay_index = data.get('relay')
+
+    if relay_index is None or not isinstance(relay_index, int) or not (1 <= relay_index <= 8):
+        return jsonify({'error': 'Invalid relay index'}), 400
 
     try:
-        send_to_giga(str(last_selected_slot))  # 해당 릴레이만 LOW
+        send_to_giga(str(relay_index))
         return jsonify({'status': 'ok'})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# ✅ standby 진입 시 전체 릴레이 OFF
 @app.route('/relay_off', methods=['POST'])
 def handle_relay_off():
     try:

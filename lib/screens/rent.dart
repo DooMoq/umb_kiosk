@@ -12,13 +12,14 @@ class RentScreen extends StatefulWidget {
 
 class _RentScreenState extends State<RentScreen> {
   int? selectedSlot;
+  int? relaySlotIndex;
 
-  Future<void> sendSlotIndex(int index) async {
+  Future<void> sendSlotData({required int led, required int relay}) async {
     try {
       final res = await http.post(
         Uri.parse('http://localhost:5000/slot'),
         headers: {'Content-Type': 'application/json'},
-        body: json.encode({'slot': index}),
+        body: json.encode({'led': led, 'relay': relay}),
       );
       if (res.statusCode != 200) {
         print('Flask 서버 오류: ${res.body}');
@@ -29,10 +30,12 @@ class _RentScreenState extends State<RentScreen> {
   }
 
   Future<void> unlockSlot() async {
+    if (relaySlotIndex == null) return;
     try {
       final res = await http.post(
         Uri.parse('http://localhost:5000/unlock'),
         headers: {'Content-Type': 'application/json'},
+        body: json.encode({'relay': relaySlotIndex}),
       );
       if (res.statusCode != 200) {
         print('릴레이 제어 실패: ${res.body}');
@@ -78,8 +81,8 @@ class _RentScreenState extends State<RentScreen> {
                 ElevatedButton(
                   onPressed: selectedSlot != null
                       ? () async {
-                          await unlockSlot(); // 🔓 릴레이 제어 먼저 수행
-                          context.go('/after_rent'); // 기존 흐름 유지
+                          await unlockSlot();
+                          context.go('/after_rent');
                         }
                       : null,
                   style: ElevatedButton.styleFrom(
@@ -158,8 +161,11 @@ class _RentScreenState extends State<RentScreen> {
                               setState(() {
                                 selectedSlot = index;
                               });
-                              int slotToSend = index > 4 ? index - 1 : index;
-                              sendSlotIndex(slotToSend);
+                              int ledIndex = index > 4 ? index - 1 : index;
+                              int relayIndex = ledIndex + 1;
+                              relaySlotIndex = relayIndex;
+
+                              sendSlotData(led: ledIndex, relay: relayIndex);
                             },
                             child: isSelected
                                 ? Hero(
