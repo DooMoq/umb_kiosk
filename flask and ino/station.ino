@@ -2012,6 +2012,29 @@ case 54:
       shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
       
       break;
+      case 88:
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000001);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      shiftOut(dataPin, clockPin, LSBFIRST, 0b00000000);
+      
+      break;
     }
     digitalWrite(latchPin, HIGH);
   }
