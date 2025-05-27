@@ -1,3 +1,4 @@
+import 'package:display/tilt.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
@@ -54,28 +55,37 @@ class _StandbyScreenState extends State<StandbyScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFEFEFF),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            GestureDetector(
-              onTap: () => context.go('/rent'),
-              child: Image.asset(
-                'assets/main.gif',
-                width: 600,
-                height: 600,
+      backgroundColor: Colors.white,
+      body: Transform.translate(
+        offset: const Offset(0, 100),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: () => context.go('/rent'),
+                child: Transform.translate(
+                  offset: const Offset(0, -100),
+                  child: Transform.scale(
+                    scale: 2,
+                    child: const TiltingPhoneIcon(),
+                  ),
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            GestureDetector(
-              onTap: () => context.go('/drying'),
-              child: const Text(
-                '이용하시려면 태그해주세요',
-                style: TextStyle(fontSize: 28),
+              const SizedBox(height: 20),
+              GestureDetector(
+                onTap: () => context.go('/drying'),
+                child: const Text(
+                  '이용하시려면 태그해주세요',
+                  style: TextStyle(
+                    fontSize: 50,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

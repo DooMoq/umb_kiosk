@@ -96,7 +96,7 @@ class _DryingScreenState extends State<DryingScreen> {
                               strokeWidth: 8,
                               backgroundColor: Colors.grey[300],
                               valueColor: const AlwaysStoppedAnimation<Color>(
-                                Colors.blue,
+                                Color(0xFF0199E5),
                               ),
                             ),
                           ),
