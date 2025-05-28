@@ -24,9 +24,9 @@ void loop() {
     else if (input == "START_DRYING") {
       Serial.println("[GIGA] START_DRYING 수신 → 팬 릴레이 ON(10초)");
 
-      digitalWrite(relayPins[4], HIGH); // 5번 핀 (index 4) HIGH → 팬 ON
+      digitalWrite(5, HIGH); // 5번 핀 (index 4) HIGH → 팬 ON
       delay(10000);                     // 10초 대기
-      digitalWrite(relayPins[4], LOW);  // 다시 LOW → 팬 OFF
+      digitalWrite(5, LOW);  // 다시 LOW → 팬 OFF
 
       Serial.println("[GIGA] 팬 릴레이 OFF (10초 후)");
     }
