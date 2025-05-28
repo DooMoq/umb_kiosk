@@ -6,9 +6,9 @@ import time
 app = Flask(__name__)
 CORS(app)
 
-# RPi ↔︎ LED 제어용 아두이노 (ttyACM0)
+# RPi ↔︎ LED 제어용 아두이노 (UNO)
 try:
-    ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
+    ser = serial.Serial('/dev/arduino_uno', 9600, timeout=1)  # ✅ 경로 수정
     time.sleep(2)
 except serial.SerialException as e:
     ser = None
@@ -17,7 +17,7 @@ except serial.SerialException as e:
 # ✅ Giga (릴레이 제어용) 연결 함수
 def send_to_giga(command: str):
     try:
-        with serial.Serial('/dev/ttyACM1', 9600, timeout=1) as giga:
+        with serial.Serial('/dev/arduino_giga', 9600, timeout=1) as giga:  # ✅ 경로 수정
             time.sleep(2)
             giga.write(f"{command}\n".encode())
             giga.flush()
