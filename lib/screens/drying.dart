@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class DryingScreen extends StatefulWidget {
   const DryingScreen({super.key});
@@ -12,6 +14,32 @@ enum DryingState { idle, drying, done }
 
 class _DryingScreenState extends State<DryingScreen> {
   DryingState dryingState = DryingState.idle;
+
+  @override
+  void initState() {
+    super.initState();
+    // 렌더링 이후 실행
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      sendLedSignal(88); // ✅ case 88 작동
+    });
+  }
+
+  Future<void> sendLedSignal(int index) async {
+    try {
+      final response = await http.post(
+        Uri.parse('http://localhost:5000/slot'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'led': index, 'relay': index}),
+      );
+      if (response.statusCode == 200) {
+        print('LED $index 신호 전송 완료');
+      } else {
+        print('LED 전송 실패: ${response.body}');
+      }
+    } catch (e) {
+      print('LED 전송 예외 발생: $e');
+    }
+  }
 
   void startDrying() {
     setState(() {
@@ -107,8 +135,9 @@ class _DryingScreenState extends State<DryingScreen> {
                 ),
               if (dryingState == DryingState.done)
                 ElevatedButton(
-                  onPressed: () {
-                    context.go('/return'); // ✅ 반납 슬롯 선택 페이지로 이동
+                  onPressed: () async {
+                    await sendLedSignal(-1); // LED 끄기
+                    context.go('/return'); // 반납 페이지로 이동
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 255, 73, 73),

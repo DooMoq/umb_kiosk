@@ -44,7 +44,7 @@ def handle_slot():
         if led_index == -1:
             ser.write(b"ALL_OFF\n")
             print("[INFO] 모든 LED OFF 전송됨")
-        elif 0 <= led_index <= 87:
+        elif 0 <= led_index <= 88:
             encoded = f"{led_index}\n".encode()
             repeat = 10 if 68 <= led_index <= 77 else 1
 
