@@ -41,7 +41,24 @@ class _DryingScreenState extends State<DryingScreen> {
     }
   }
 
-  void startDrying() {
+  void startDrying() async {
+    // 🔹 Flask에 startDrying 신호 전송
+    try {
+      final response = await http.post(
+        Uri.parse('http://localhost:5000/start_drying'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'command': 'start'}),
+      );
+      if (response.statusCode == 200) {
+        print('건조 시작 명령 전송 성공');
+      } else {
+        print('건조 시작 명령 전송 실패: ${response.body}');
+      }
+    } catch (e) {
+      print('건조 시작 예외 발생: $e');
+    }
+
+    // 🔹 UI 상태 전환
     setState(() {
       dryingState = DryingState.drying;
     });

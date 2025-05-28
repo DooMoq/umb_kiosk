@@ -20,7 +20,17 @@ void loop() {
         digitalWrite(relayPins[i], HIGH);
       }
       Serial.println("[GIGA] ALL_OFF: 모든 릴레이 HIGH");
-    } else {
+    } 
+    else if (input == "START_DRYING") {
+      Serial.println("[GIGA] START_DRYING 수신 → 팬 릴레이 ON(10초)");
+
+      digitalWrite(relayPins[4], HIGH); // 5번 핀 (index 4) HIGH → 팬 ON
+      delay(10000);                     // 10초 대기
+      digitalWrite(relayPins[4], LOW);  // 다시 LOW → 팬 OFF
+
+      Serial.println("[GIGA] 팬 릴레이 OFF (10초 후)");
+    }
+    else {
       int relayIndex = input.toInt();  // 1~8
       if (relayIndex >= 1 && relayIndex <= 8) {
         digitalWrite(relayPins[relayIndex - 1], LOW);
