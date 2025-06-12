@@ -1,4 +1,4 @@
-int relayPin = 5;  // 릴레이 Signal 핀은 D8 사용
+int relayPin = 20;  // 릴레이 Signal 핀은 D8 사용
 
 void setup() {
   pinMode(relayPin, OUTPUT);       // 릴레이 핀을 출력 모드로 설정
