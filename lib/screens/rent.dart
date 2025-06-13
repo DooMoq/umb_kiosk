@@ -13,6 +13,32 @@ class RentScreen extends StatefulWidget {
 class _RentScreenState extends State<RentScreen> {
   int? selectedSlot;
   int? relaySlotIndex;
+  Set<int> availableSet = {}; // 사용 가능 슬롯 번호 (1부터 시작)
+
+  @override
+  void initState() {
+    super.initState();
+    fetchAvailableSlots();
+  }
+
+  Future<void> fetchAvailableSlots() async {
+    try {
+      final res = await http.get(
+        Uri.parse(
+            'http://121.124.228.202:10000/umbrella/rent/slots?lockerId=lockerA'),
+      );
+      if (res.statusCode == 200) {
+        final List<dynamic> available = json.decode(res.body);
+        setState(() {
+          availableSet = available.cast<int>().toSet(); // displayNumber 기준
+        });
+      } else {
+        print('사용 가능 슬롯 불러오기 실패: ${res.body}');
+      }
+    } catch (e) {
+      print('슬롯 정보 요청 실패: $e');
+    }
+  }
 
   Future<void> sendSlotData({required int led, required int relay}) async {
     try {
@@ -53,7 +79,7 @@ class _RentScreenState extends State<RentScreen> {
           const int columns = 5;
           const int totalSlots = 44;
           const double spacing = 12;
-          int rows = (totalSlots / columns).ceil(); // 9행
+          int rows = (totalSlots / columns).ceil();
 
           double maxGridHeight = constraints.maxHeight - 260;
           double slotSize = (maxGridHeight - spacing * (rows - 1)) / rows;
@@ -121,16 +147,21 @@ class _RentScreenState extends State<RentScreen> {
                         itemBuilder: (context, index) {
                           if (index == 4) return const SizedBox.shrink();
 
-                          int visibleIndex = index > 4 ? index - 1 : index;
-                          int displayNumber = visibleIndex + 1;
+                          int slotNumber = index > 4 ? index - 1 : index;
+                          int displayNumber = slotNumber + 1;
+
+                          final isDisabled =
+                              !availableSet.contains(displayNumber);
                           final isSelected = selectedSlot == index;
 
                           final slotWidget = Container(
                             width: slotSize,
                             height: slotSize,
                             decoration: BoxDecoration(
-                              color: const Color(0xFF73BE76),
-                              border: isSelected
+                              color: isDisabled
+                                  ? const Color.fromARGB(255, 199, 199, 199)
+                                  : const Color(0xFF73BE76),
+                              border: isSelected && !isDisabled
                                   ? Border.all(color: Colors.black, width: 3)
                                   : null,
                               borderRadius: BorderRadius.circular(15),
@@ -158,20 +189,35 @@ class _RentScreenState extends State<RentScreen> {
 
                           return GestureDetector(
                             onTap: () {
+                              if (isDisabled) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      '다른 슬롯을 선택해주세요',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    backgroundColor: Colors.red,
+                                    duration: Duration(seconds: 2),
+                                  ),
+                                );
+                                return;
+                              }
+
                               setState(() {
                                 selectedSlot = index;
                               });
-                              int ledIndex = index > 4 ? index - 1 : index;
+                              int ledIndex = slotNumber;
                               int relayIndex = ledIndex + 1;
                               relaySlotIndex = relayIndex;
 
                               sendSlotData(led: ledIndex, relay: relayIndex);
                             },
-                            child: isSelected
-                                ? Hero(
-                                    tag: 'selected-slot',
-                                    child: slotWidget,
-                                  )
+                            child: isSelected && !isDisabled
+                                ? Hero(tag: 'selected-slot', child: slotWidget)
                                 : slotWidget,
                           );
                         },

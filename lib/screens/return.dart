@@ -12,13 +12,39 @@ class ReturnScreen extends StatefulWidget {
 
 class _ReturnScreenState extends State<ReturnScreen> {
   int? selectedSlot;
+  Set<int> occupiedSet = {}; // 사용 중인 슬롯 번호들 (1부터 시작)
+
+  @override
+  void initState() {
+    super.initState();
+    fetchOccupiedSlots();
+  }
+
+  Future<void> fetchOccupiedSlots() async {
+    try {
+      final res = await http.get(
+        Uri.parse(
+            'http://121.124.228.202:10000/umbrella/rent/slots?lockerId=lockerA'),
+      );
+      if (res.statusCode == 200) {
+        final List<dynamic> occupied = json.decode(res.body);
+        setState(() {
+          occupiedSet = occupied.cast<int>().toSet(); // displayNumber 기준
+        });
+      } else {
+        print('[RETURN] 사용 중 슬롯 불러오기 실패: ${res.body}');
+      }
+    } catch (e) {
+      print('[RETURN] 슬롯 정보 요청 실패: $e');
+    }
+  }
 
   Future<void> sendSlotIndex(int index) async {
     try {
       final res = await http.post(
         Uri.parse('http://localhost:5000/slot'),
         headers: {'Content-Type': 'application/json'},
-        body: json.encode({'led': index + 44, 'relay': -1}), // ✅ 구조 변경
+        body: json.encode({'led': index + 44, 'relay': -1}),
       );
       if (res.statusCode != 200) {
         print('[RETURN] 서버 오류: ${res.body}');
@@ -36,7 +62,7 @@ class _ReturnScreenState extends State<ReturnScreen> {
           const int columns = 5;
           const int totalSlots = 44;
           const double spacing = 12;
-          int rows = (totalSlots / columns).ceil(); // 9행
+          int rows = (totalSlots / columns).ceil();
 
           double maxGridHeight = constraints.maxHeight - 260;
           double slotSize = (maxGridHeight - spacing * (rows - 1)) / rows;
@@ -101,16 +127,21 @@ class _ReturnScreenState extends State<ReturnScreen> {
                         itemBuilder: (context, index) {
                           if (index == 4) return const SizedBox.shrink();
 
-                          int visibleIndex = index > 4 ? index - 1 : index;
-                          int displayNumber = visibleIndex + 1;
+                          int slotNumber = index > 4 ? index - 1 : index;
+                          int displayNumber = slotNumber + 1;
+
+                          final isDisabled =
+                              occupiedSet.contains(displayNumber);
                           final isSelected = selectedSlot == index;
 
                           final slotWidget = Container(
                             width: slotSize,
                             height: slotSize,
                             decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 255, 73, 73),
-                              border: isSelected
+                              color: isDisabled
+                                  ? const Color.fromARGB(255, 199, 199, 199)
+                                  : const Color.fromARGB(255, 255, 73, 73),
+                              border: isSelected && !isDisabled
                                   ? Border.all(color: Colors.black, width: 3)
                                   : null,
                               borderRadius: BorderRadius.circular(15),
@@ -138,17 +169,33 @@ class _ReturnScreenState extends State<ReturnScreen> {
 
                           return GestureDetector(
                             onTap: () {
+                              if (isDisabled) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      '비어 있는 슬롯만 선택해주세요',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    backgroundColor: Colors.red,
+                                    duration: Duration(seconds: 2),
+                                  ),
+                                );
+                                return;
+                              }
+
                               setState(() {
                                 selectedSlot = index;
                               });
-                              int slotToSend = index > 4 ? index - 1 : index;
-                              sendSlotIndex(slotToSend); // ✅ +44 유지
+
+                              int slotToSend = slotNumber;
+                              sendSlotIndex(slotToSend);
                             },
-                            child: isSelected
-                                ? Hero(
-                                    tag: 'selected-slot',
-                                    child: slotWidget,
-                                  )
+                            child: isSelected && !isDisabled
+                                ? Hero(tag: 'selected-slot', child: slotWidget)
                                 : slotWidget,
                           );
                         },

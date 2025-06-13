@@ -2,6 +2,8 @@ import 'package:display/tilt.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
+import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_channel/status.dart' as status;
 import 'dart:convert';
 
 class StandbyScreen extends StatefulWidget {
@@ -12,11 +14,41 @@ class StandbyScreen extends StatefulWidget {
 }
 
 class _StandbyScreenState extends State<StandbyScreen> {
+  late WebSocketChannel _channel;
+
   @override
   void initState() {
     super.initState();
     turnOffAllLeds(); // ✅ LED OFF
     turnOffAllRelays(); // ✅ 릴레이 OFF
+    _connectWebSocket(); // ✅ 웹소켓 연결
+  }
+
+  void _connectWebSocket() {
+    _channel = WebSocketChannel.connect(
+      Uri.parse(
+          'ws://121.124.228.202:10000/ws/locker-updates?lockerId=A01'), // ✅ WebSocket 서버 주소 (수정 가능)
+    );
+
+    _channel.stream.listen(
+      (message) {
+        print('📩 WebSocket 수신 메시지: $message');
+
+        if (message == 'rent') {
+          context.go('/rent');
+        } else if (message == 'return') {
+          context.go('/drying');
+        }
+      },
+      onDone: () => print('🛑 WebSocket 연결 종료'),
+      onError: (error) => print('❌ WebSocket 오류 발생: $error'),
+    );
+  }
+
+  @override
+  void dispose() {
+    _channel.sink.close(status.normalClosure);
+    super.dispose();
   }
 
   Future<void> turnOffAllLeds() async {
